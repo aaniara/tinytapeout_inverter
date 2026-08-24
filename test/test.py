@@ -25,7 +25,7 @@ async def test_project(dut):
 
     dut._log.info("Test PWM behavior")
 
-    for duty_cycle, expected_high_cycles in ((0, 0), (128, 128), (255, 256)):
+    for duty_cycle, expected_high_cycles in ((0, 0), (64, 64), (128, 128), (192, 192), (255, 256)):
         dut.ui_in.value = duty_cycle
         high_cycles = 0
 
