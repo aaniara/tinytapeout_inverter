@@ -33,4 +33,9 @@ async def test_project(dut):
             await ClockCycles(dut.clk, 1)
             high_cycles += int(dut.uo_out.value) & 1
 
+        dut._log.info(
+            "Testing duty cycle %d: expected %d high cycles",
+            duty_cycle,
+            expected_high_cycles,
+        )
         assert high_cycles == expected_high_cycles
