@@ -16,13 +16,22 @@ module tt_um_jh_al_inverter (
     input  wire       rst_n     // reset_n - low to reset
 );
 
+  reg [7:0] counter;
+
+  always @(posedge clk) begin
+    if (!rst_n)
+      counter <= 8'b0;
+    else
+      counter <= counter + 8'b1;
+  end
+
   // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out[0]  = ~ui_in[0];  // ou_out[0] is the inverted of ui_in[0]
-  assign uo_out[7:1] = 0;        // All other outputs are not used, so assign to 0
+  assign uo_out[0]  = counter < ui_in;
+  assign uo_out[7:1] = 0;
   assign uio_out = 0;
   assign uio_oe  = 0;
 
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+  // List unused inputs to prevent warnings
+  wire _unused = &{ena, uio_in, 1'b0};
 
 endmodule

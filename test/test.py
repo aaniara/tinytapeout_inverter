@@ -17,24 +17,20 @@ async def test_project(dut):
     # Reset
     dut._log.info("Reset")
     dut.ena.value = 1
-    dut.ui_in.value = 0
+    dut.ui_in.value = 128
     dut.uio_in.value = 0
     dut.rst_n.value = 0
     await ClockCycles(dut.clk, 10)
     dut.rst_n.value = 1
 
-    dut._log.info("Test project behavior")
+    dut._log.info("Test PWM behavior")
 
-    # Set the input values you want to test
-    #dut.ui_in.value = 20
-    #dut.uio_in.value = 30
+    for duty_cycle, expected_high_cycles in ((0, 0), (128, 128), (255, 255)):
+        dut.ui_in.value = duty_cycle
+        high_cycles = 0
 
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
+        for _ in range(256):
+            await ClockCycles(dut.clk, 1)
+            high_cycles += int(dut.uo_out.value & 1)
 
-    # The following assertion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 1
-
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+        assert high_cycles == expected_high_cycles
