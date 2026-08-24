@@ -31,6 +31,6 @@ async def test_project(dut):
 
         for _ in range(256):
             await ClockCycles(dut.clk, 1)
-            high_cycles += int(dut.uo_out.value & 1)
+            high_cycles += int(dut.uo_out.value) & 1
 
         assert high_cycles == expected_high_cycles
